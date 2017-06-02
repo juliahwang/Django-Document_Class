@@ -5,7 +5,12 @@
     <title>Polls Detail</title>
 </head>
 <body>
-    <h1>{{ question.question_text }}</h1>
-
+<h1>{{ question.question_text }}</h1>
+<ul>
+    <!--장고 템플릿에서는 함수를 실행할 때 ()를 사용하지 않는다-->
+    {% for choice in question.choice_set.all %}
+    <li>{{ choice.choice_text }}</li>
+    {% endfor %}
+</ul>
 </body>
 </html>

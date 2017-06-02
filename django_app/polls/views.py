@@ -1,5 +1,5 @@
 from django.http import HttpResponse, Http404
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404, get_list_or_404
 
 from polls.models import Question
 
@@ -22,15 +22,29 @@ def index(request):
     return render(request, 'polls/index.html', context)
 
 
-def detail(request, question_id):
-    # question_id가 pk인 Question 객체를 가져와
-    try:
-        question = Question.objects.get(pk=question_id)
-    # production 상황에서는 절대로 DoesNotExist가 뜨면 안된다. 히스토리나 코드가 유출될 수 있기 때문.
-    except Question.DoesNotExist as e:
-        raise Http404('Question does not exist')
+### get_list_or_404() 사용하여 index() 만들기
+# def index(request):
+#     question = get_list_or_404(Question.objects.order_by('-pub_date')[:5])
+#     context = {
+#         'question': question,
+#     }
+#     return render(request, 'polls/index.html', context)
 
-        # context라는 이름을 가진 dict에 'question'이라는 키값으로 위 변수를 할당
+
+def detail(request, question_id):
+    # try:
+    #     question = Question.objects.get(pk=question_id)
+    # # production 상황에서는 절대로 DoesNotExist가 뜨면 안된다. 히스토리나 코드가 유출될 수 있기 때문.
+    # except Question.DoesNotExist as e:
+    #     raise Http404('Question does not exist')
+
+    ### 다음 두 줄은 같은 의미이다(관계형데이터베이스 개념)
+    # question.choice_set.all()
+    # Choice.objects.filter(question=question).all()
+
+    # question_id가 pk인 Question 객체를 가져와
+    question = get_object_or_404(Question, pk=question_id)
+    # context라는 이름을 가진 dict에 'question'이라는 키값으로 위 변수를 할당
     context = {
         'question': question,
     }
