@@ -7,10 +7,27 @@
 <body>
 <h1>{{ question.question_text }}</h1>
 <ul>
-    <!--장고 템플릿에서는 함수를 실행할 때 ()를 사용하지 않는다-->
-    {% for choice in question.choice_set.all %}
-    <li>{{ choice.choice_text }}</li>
+    {% if messages %}
+    {% for message in messages %}
+    <p><strong>{{ error_message }}</strong></p><br/>
     {% endfor %}
+    {% endif %}
+
+    <form action="{% url 'polls:vote' question.id %}" method="POST">
+        {{ csrf_token }}
+        <!--장고 템플릿태그에서는 함수를 실행할 때 ()를 사용하지 않는다-->
+        {% for choice in question.choice_set.all %}
+        <input type="radio"
+               name="choice"
+               id="choice-{{ forloop.counter }}"
+               value="{{ choice.id }}"/>
+        <!-- 가운데 '-'를 쓰면 for를 이용하여 텍스트를 클릭해도 클릭이 된다 -->
+        <label for="choice-{{ forloop.counter }}">
+            {{ choice.choice_text }}
+        </label><br/>
+        {% endfor %}
+        <input type="submit" value="Vote"/>
+    </form>
 </ul>
 </body>
 </html>
