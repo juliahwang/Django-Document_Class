@@ -1,10 +1,6 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Polls Detail</title>
-</head>
-<body>
+{% extends 'polls/base.html' %}
+
+{% block content %}
 <h1>{{ question.question_text }}</h1>
 <ul>
     {% if messages %}
@@ -29,5 +25,4 @@
         <input type="submit" value="Vote"/>
     </form>
 </ul>
-</body>
-</html>
+{% endblock %}
