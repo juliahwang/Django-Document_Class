@@ -11,8 +11,15 @@ def index(request):
     :return: 최근 5개의 질문
     """
     latest_question_list = Question.objects.order_by('-pub_date')[:5]
-    output = ', '.join([q.question_text for q in latest_question_list])
-    return HttpResponse(output)
+    # lateset_question_list라는 키로 위 쿼리셋을 전달
+    # polls/index.html을 이용해 render한 결과를 리턴
+    context = {
+        'latest_question_list': latest_question_list,
+    }
+    # Template DoesNot Exist
+    # settings.py에서 template 디렉토리 경로를 바꿔줘야한다
+    # os.path.join()에서 TEMPLATE_DIR을 정해준다.
+    return render(request, 'polls/index.html', context)
 
 
 def detail(request, question_id):
