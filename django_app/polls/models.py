@@ -18,6 +18,10 @@ class Question(models.Model):  # 테이블명은 polls_question이 된다.
         return self.pub_date >= timezone.now() - datetime.timedelta(days=1)
         # 발행한지 하루 이내. DateTimeField를 썼으므로 초까지 계산하여 하루 이내의 것만 return하는 메소드.
 
+    was_published_recently.short_description = '최근발행여부'
+    was_published_recently.boolean = True
+    was_published_recently.admin_order_field = 'pub_date'
+
 
 class Choice(models.Model):
     question = models.ForeignKey(Question, verbose_name='해당 질문', on_delete=models.CASCADE)
