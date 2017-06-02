@@ -1,4 +1,4 @@
-from django.http import HttpResponse
+from django.http import HttpResponse, Http404
 from django.shortcuts import render
 
 from polls.models import Question
@@ -23,7 +23,19 @@ def index(request):
 
 
 def detail(request, question_id):
-    return HttpResponse("You're looking at question %s." % question_id)
+    # question_id가 pk인 Question 객체를 가져와
+    try:
+        question = Question.objects.get(pk=question_id)
+    # production 상황에서는 절대로 DoesNotExist가 뜨면 안된다. 히스토리나 코드가 유출될 수 있기 때문.
+    except Question.DoesNotExist as e:
+        raise Http404('Question does not exist')
+
+        # context라는 이름을 가진 dict에 'question'이라는 키값으로 위 변수를 할당
+    context = {
+        'question': question,
+    }
+    # 이후 'polls/detail.html'과 context를 렌더링한 결과를 리턴
+    return render(request, 'polls/detail.html', context)
 
 
 def results(request, question_id):
